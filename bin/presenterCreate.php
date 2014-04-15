@@ -5,7 +5,12 @@ if(!isset($argv[1])){
 	die("Zadejte prosim nazev presenteru jako prvni parametr\n");
 }
 
+if(!isset($argv[2])){
+	die("Zadejte prosim preklad jako druhy parametr\n");
+}
+
 $presenterName = ucfirst($argv[1]);
+$title = ucfirst($argv[2]);
 
 $path = getcwd();
 $matches = array();
@@ -30,16 +35,20 @@ class {$presenterName}Presenter extends BasePresenter {
 }
 ";
 
-$templateTemplate = 
-"{block #title}{_'$presenterName'}{/block}
+function createTemplate($presenterName, $title, $name){
+  return "{block #title}{_'$title'}{/block}
 
-{block #h1}{_''}{/block}
+{block #h1}{_'$title'}{/block}
 
-{block #breadcrumb}<a n:href=''>{_''}</a><a href='' class='current'>{_''}</a>{/block}
+{block #breadcrumb}"
+. ($name == 'list' ? "<a n:href='list' class='current'>{_'$title'}</a>"
+		  : "<a n:href='list'>{_'$title'}</a><a n:href='$name' class='current'>{_''}</a>")
+. "{/block}
 
 {block #content}
 
 {/block}";
+}
 
 $dirMod = 0775;
 if(!is_dir('presenters')){
@@ -54,5 +63,5 @@ file_put_contents("presenters/{$presenterName}Presenter.php", $presenterTemplate
 
 $templates = array('add', 'edit', 'list');
 foreach($templates as $template){
-	file_put_contents("templates/{$presenterName}/{$template}.latte", $templateTemplate);
+	file_put_contents("templates/{$presenterName}/{$template}.latte", createTemplate($presenterName, $title, $template));
 }
