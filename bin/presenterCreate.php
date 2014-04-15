@@ -36,18 +36,32 @@ class {$presenterName}Presenter extends BasePresenter {
 ";
 
 function createTemplate($presenterName, $title, $name){
-  return "{block #title}{_'$title'}{/block}
+$template = '';
+$subtitleVar = '';
+$subtitleVarDash = '';
 
-{block #h1}{_'$title'}{/block}
+if($name != 'list'){
+  $template .= "{var \$subtitle = ''}
+
+";
+  $subtitleVar = "\$subtitle";
+  $subtitleVarDash = " - \$subtitle";
+}
+
+$template .= "{block #title}{_\"{$title}{$subtitleVarDash}\"}{/block}
+
+{block #h1}{_\"{$title}{$subtitleVarDash}\"}{/block}
 
 {block #breadcrumb}"
 . ($name == 'list' ? "<a n:href='list' class='current'>{_'$title'}</a>"
-		  : "<a n:href='list'>{_'$title'}</a><a n:href='$name' class='current'>{_''}</a>")
+		  : "<a n:href='list'>{_'$title'}</a><a n:href='$name' class='current'>{_$subtitleVar|firstUpper}</a>")
 . "{/block}
 
 {block #content}
 
 {/block}";
+
+return $template;
 }
 
 $dirMod = 0775;
@@ -59,7 +73,7 @@ if(!is_dir("templates/{$presenterName}")){
 	mkdir("templates/{$presenterName}", $dirMod, true);
 }
 
-file_put_contents("presenters/{$presenterName}Presenter.php", $presenterTemplate);
+//file_put_contents("presenters/{$presenterName}Presenter.php", $presenterTemplate);
 
 $templates = array('add', 'edit', 'list');
 foreach($templates as $template){
