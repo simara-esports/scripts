@@ -25,7 +25,7 @@ use Admin\BasePresenter;
  *
  * @author Svaťa
  */
-class {$presenterName}Presenter extends BasePresenter{
+class {$presenterName}Presenter extends BasePresenter {
 
 }
 ";
