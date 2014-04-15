@@ -58,7 +58,26 @@ $template .= "{block #title}{_\"{$title}{$subtitleVarDash}\"}{/block}
 . "{/block}
 
 {block #content}
+";
 
+if($name == 'list'){
+  $template .= 
+"	<div class='widget-box'>
+		<div class='widget-title'>
+			<span class='icon'>
+				<i class='fa fa-r'></i>
+			</span>
+			<h5>{_'$title'}</h5>
+		</div>
+		<div class='widget-content'>
+			<h5><a n:href='add'>{_''}</a></h5>
+		</div>
+	</div>
+	{control grid}";
+}
+
+$template .=
+"
 {/block}";
 
 return $template;
@@ -73,7 +92,7 @@ if(!is_dir("templates/{$presenterName}")){
 	mkdir("templates/{$presenterName}", $dirMod, true);
 }
 
-//file_put_contents("presenters/{$presenterName}Presenter.php", $presenterTemplate);
+file_put_contents("presenters/{$presenterName}Presenter.php", $presenterTemplate);
 
 $templates = array('add', 'edit', 'list');
 foreach($templates as $template){
