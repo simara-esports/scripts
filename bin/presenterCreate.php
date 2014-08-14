@@ -5,12 +5,7 @@ if(!isset($argv[1])){
 	die("Zadejte prosim nazev presenteru jako prvni parametr\n");
 }
 
-if(!isset($argv[2])){
-	die("Zadejte prosim preklad jako druhy parametr\n");
-}
-
 $presenterName = ucfirst($argv[1]);
-$title = ucfirst($argv[2]);
 
 $path = getcwd();
 $matches = array();
@@ -35,29 +30,10 @@ class {$presenterName}Presenter extends BasePresenter {
 }
 ";
 
-function createTemplate($presenterName, $title, $name){
+function createTemplate($presenterName, $name){
 $template = '';
-$subtitleVar = '';
-$subtitleVarDash = '';
 
-if($name != 'list'){
-  $template .= "{var \$subtitle = ''}
-
-";
-  $subtitleVar = "\$subtitle";
-  $subtitleVarDash = " - \$subtitle";
-}
-
-$template .= "{block #title}{_\"{$title}{$subtitleVarDash}\"}{/block}
-
-{block #h1}{_\"{$title}{$subtitleVarDash}\"}{/block}
-
-{block #breadcrumb}"
-. ($name == 'list' ? "<a n:href='list' class='current'>{_'$title'}</a>"
-		  : "<a n:href='list'>{_'$title'}</a><a n:href='$name' class='current'>{_$subtitleVar|firstUpper}</a>")
-. "{/block}
-
-{block #content}
+$template .= "{block #content}
 ";
 
 if($name == 'list'){
@@ -65,15 +41,21 @@ if($name == 'list'){
 "	<div class='widget-box'>
 		<div class='widget-title'>
 			<span class='icon'>
-				<i class='fa fa-r'></i>
+				<i class='fa fa-'></i>
 			</span>
-			<h5>{_'$title'}</h5>
+			<h5>{include #titleNavigation}</h5>
 		</div>
 		<div class='widget-content'>
 			<h5><a n:href='add'>{_''}</a></h5>
 		</div>
 	</div>
 	{control grid}";
+}elseif($name == 'edit'){
+    $template .=
+"	{control formEdit}";
+}elseif($name == 'add'){
+    $template .=
+"	{control formAdd}";
 }
 
 $template .=
@@ -96,5 +78,5 @@ file_put_contents("presenters/{$presenterName}Presenter.php", $presenterTemplate
 
 $templates = array('add', 'edit', 'list');
 foreach($templates as $template){
-	file_put_contents("templates/{$presenterName}/{$template}.latte", createTemplate($presenterName, $title, $template));
+	file_put_contents("templates/{$presenterName}/{$template}.latte", createTemplate($presenterName, $template));
 }

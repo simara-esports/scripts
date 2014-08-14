@@ -2,10 +2,10 @@
 <?php
 
 if(!isset($argv[1])){
-	die("Zadejte prosim nazev presenteru jako prvni parametr\n");
+	die("Zadejte prosim nazev modelu jako prvni parametr\n");
 }
 
-$presenterName = ucfirst($argv[1]);
+$modelName = ucfirst($argv[1]);
 $smallName = lcfirst($argv[1]);
 
 $repositoryTemplate = 
@@ -16,9 +16,9 @@ namespace Hokej;
 use Esports\Repository\Repository;
 
 /**
- * {$presenterName} repositar
+ * {$modelName} repositar
  */
-class {$presenterName}Repository extends Repository {
+class {$modelName}Repository extends Repository {
 
 }
 ";
@@ -31,14 +31,14 @@ namespace Hokej;
 use Nette\Object;
 
 /**
- * {$presenterName} sluzba
+ * {$modelName} sluzba
  */
-class {$presenterName}Service extends Object {
+class {$modelName}Service extends Object {
 
-	/** @var \Hokej\\{$presenterName}Repository */
+	/** @var \Hokej\\{$modelName}Repository */
 	protected \${$smallName}Repository;
 	
-	function __construct({$presenterName}Repository \${$smallName}Repository) {
+	function __construct({$modelName}Repository \${$smallName}Repository) {
 		\$this->{$smallName}Repository = \${$smallName}Repository;
 	}
 }
@@ -52,24 +52,24 @@ namespace Hokej;
 use Nette\Object;
 
 /**
- * {$presenterName} fasada
+ * {$modelName} fasada
  */
-class {$presenterName}Facade extends Object {
+class {$modelName}Facade extends Object {
 
-	/** @var \Hokej\\{$presenterName}Service */
+	/** @var \Hokej\\{$modelName}Service */
 	protected \${$smallName}Service;
 	
-	function __construct({$presenterName}Service \${$smallName}Service) {
+	function __construct({$modelName}Service \${$smallName}Service) {
 		\$this->{$smallName}Service = \${$smallName}Service;
 	}
 }
 ";
 
 $dirMod = 0775;
-if(!is_dir($presenterName)){
-    mkdir($presenterName, $dirMod);
+if(!is_dir($modelName)){
+    mkdir($modelName, $dirMod);
 }
 
-file_put_contents("$presenterName/{$presenterName}Repository.php", $repositoryTemplate);
-file_put_contents("$presenterName/{$presenterName}Service.php", $serviceTemplate);
-file_put_contents("$presenterName/{$presenterName}Facade.php", $facadeTemplate);
+file_put_contents("$modelName/{$modelName}Repository.php", $repositoryTemplate);
+file_put_contents("$modelName/{$modelName}Service.php", $serviceTemplate);
+file_put_contents("$modelName/{$modelName}Facade.php", $facadeTemplate);

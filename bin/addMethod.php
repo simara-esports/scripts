@@ -1,6 +1,14 @@
 #!/usr/bin/php5
 <?php
 
+function isArrayArg(&$arg){
+  if($arg[0] == 'A'){
+    $arg = substr($arg, 1);
+    return true;
+  }
+  return false;
+}
+
 if(!isset($argv[1])){
   die("Zadejte prosim nazev modulu jako prvni parametr\n");
 }
@@ -27,6 +35,7 @@ $args = array_splice($argv, 5);
 
 $argsDollar = array();
 foreach($args as $arg){
+  isArrayArg($arg);
   $argsDollar[] = "\$$arg";
 }
 $argsString = implode(", ", $argsDollar);
@@ -36,33 +45,36 @@ $wholeComment = "
 \t * $comment
 ";
 foreach($args as $arg){
+    $isArray = isArrayArg($arg);
+    $type = $isArray ? "array" : "int";
     $wholeComment .=
-"\t * @param int \${$arg}
+"\t * @param {$type} \${$arg}
 ";
 }
 $wholeComment .=
 "\t * @return {$returnType}
 \t */";
 
+$useReturn = $returnType == 'void' ? '' : 'return ';
 
 $facadeMethod =
 "$wholeComment
 \tpublic function {$method}({$argsString}) {
-\t\treturn \$this->{$lmodule}Service->{$method}({$argsString});
+\t\t{$useReturn}\$this->{$lmodule}Service->{$method}({$argsString});
 \t}
 ";
 
 $serviceMethod =
 "$wholeComment
 \tpublic function {$method}({$argsString}) {
-\t\treturn \$this->{$lmodule}Repository->{$method}({$argsString});
+\t\t{$useReturn}\$this->{$lmodule}Repository->{$method}({$argsString});
 \t}
 ";
 
 $repositoryMethod =
 "$wholeComment
 \tpublic function {$method}({$argsString}) {
-\t\treturn \$this->;
+\t\t{$useReturn}\$this->;
 \t}
 ";
 
