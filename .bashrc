@@ -141,6 +141,24 @@ git_branch_color(){
     fi
 }
 
-PS1="\[\033[00m\]\u@\h\[\033[01;33m\] \w \[\033[\$(git_branch_color)\]\$(parse_git_branch)\[\033[00m\]$\[\033[00m\] "
+git_stash_color(){
+    STASH=`git stash list | wc -l`
+    if [ "$STASH" != "0" ]; then
+	echo "35m"
+    fi
+}
+
+git_stash(){
+    STASH=`git stash list | wc -l`
+    if [ "$STASH" != "0" ]; then
+	echo "(stash $STASH)"
+    fi
+}
+
+PS1="\[\033[00m\]\u@\h\[\033[01;33m\] \w \[\033[\$(git_branch_color)\]\$(parse_git_branch)\[\033[\$(git_stash_color)\]\$(git_stash)\[\033[00m\]$\[\033[00m\] "
 
 umask 0002
+
+export EDITOR=vim
+alias fuck='sudo $(history -p \!\!)'
+export XDEBUG_CONFIG="idekey=netbeans-xdebug"
